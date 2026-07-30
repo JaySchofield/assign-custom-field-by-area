@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@terros-inc/sdk": "link:../connect/sdk"
+  }
+}
