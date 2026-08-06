@@ -29,8 +29,8 @@ export type CliOptions = {
 export function parseCliOptions(): CliOptions {
   const { values } = parseArgs({
     options: {
-      "subzone-field-id": { type: "string", default: "CF.kveysCFY" },
-      "market-field-id": { type: "string" },
+      "subzone-field-id": { type: "string", default: "CF.123abc" }, // Set default value here
+      "market-field-id": { type: "string" }, // Set default value here
       "dry-run": { type: "boolean", default: false },
       "max-updates-per-pass": { type: "string" },
       "only-area-ids": { type: "string" },

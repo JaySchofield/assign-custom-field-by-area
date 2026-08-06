@@ -31,7 +31,7 @@ All options are CLI flags (parsed with Node's built-in `node:util.parseArgs`), p
 after `--` when running through `pnpm`/`npx`:
 
 - `--subzone-field-id <id>` — custom field ID to write for subzone areas. Defaults to the
-  value hardcoded in `parseCliOptions` in `index.ts`; edit that default directly if you'd
+  value hardcoded in `parseCliOptions` in `cli.ts`; edit that default directly if you'd
   rather not pass the flag every run. Pass `--subzone-field-id ""` to skip the subzone
   pass entirely.
 - `--market-field-id <id>` — custom field ID to write for market (top-level) areas. Same
