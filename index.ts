@@ -39,12 +39,7 @@ async function main(): Promise<void> {
     updateMarkets(client, areas, containers, containedBy),
   ]);
 
-  const submitted = [...subzoneResult.submitted, ...marketResult.submitted];
-  const failures = [...subzoneResult.failures, ...marketResult.failures];
-  const skippedOverlaps = [...subzoneResult.skippedOverlaps, ...marketResult.skippedOverlaps];
-
-  printSummary(submitted, skippedOverlaps, failures, dryRun);
-  if (failures.length > 0) throw new Error(`${failures.length} Area update(s) failed.`);
+  printSummary(subzoneResult, marketResult, dryRun);
 }
 
 // Labels every area that has no sub-areas of its own (i.e. isn't a container) as a subzone,
