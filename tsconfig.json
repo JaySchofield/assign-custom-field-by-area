@@ -7,5 +7,5 @@
     "skipLibCheck": true,
     "types": ["node"]
   },
-  "include": ["index.ts"]
+  "include": ["*.ts"]
 }
