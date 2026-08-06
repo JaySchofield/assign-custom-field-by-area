@@ -9,28 +9,35 @@ const { subzoneFieldId, marketFieldId, dryRun, maxUpdatesPerPass, onlyAreaIds, v
   parseCliOptions();
 const submitOptions = { dryRun, verbose, maxUpdatesPerPass };
 
+// Infers a market/subzone hierarchy from Terros area polygons and bulk-updates matching
+// accounts' custom fields accordingly. Geometry, API calls, and reporting live in their
+// own modules; this file holds the market/subzone classification rules, which is the
+// part most likely to need customer-specific tweaks.
 async function main(): Promise<void> {
   if (dryRun) console.log("DRY RUN: no accounts will be updated.\n");
 
-  const client = new TerrosClient(); // add ApiKey or use terros auth login from the CL
+  const client = new TerrosClient(); // add ApiKey or use terros auth login from the CLI
+
+  // Fetch every area, then derive geographic containment between all of them.
   const allAreas = await listAreas(client);
-  // Containment is computed over every area so that a targeted area's containers/containees
-  // are correctly identified even if they're not in onlyAreaIds themselves; only the final
-  // update lists are filtered down to onlyAreaIds.
   const polygons = buildPolygons(allAreas);
   // containers: areaId -> ids of areas it geographically contains
   // containedBy: areaId -> ids of areas that contain it
   const { containers, containedBy } = buildContainment(polygons);
 
+  // Containment is computed over every area so that a targeted area's containers/containees
+  // are correctly identified even if they're not in onlyAreaIds themselves; only the final
+  // update lists are filtered down to onlyAreaIds.
   const areas = onlyAreaIds
     ? allAreas.filter((area) => onlyAreaIds.includes(area.areaId))
     : allAreas;
   if (onlyAreaIds) console.log(`Restricting to ${areas.length} of ${allAreas.length} areas.\n`);
 
-  // These two passes write to different custom fields, so they can run in the same
-  // execution without racing each other.
-  const subzoneResult = await updateSubAreas(client, areas, containers, containedBy);
-  const marketResult = await updateMarkets(client, areas, containers, containedBy);
+  // Classify each area as a subzone or market, then call account/bulk for each area
+  const [subzoneResult, marketResult] = await Promise.all([
+    updateSubAreas(client, areas, containers, containedBy),
+    updateMarkets(client, areas, containers, containedBy),
+  ]);
 
   const submitted = [...subzoneResult.submitted, ...marketResult.submitted];
   const failures = [...subzoneResult.failures, ...marketResult.failures];

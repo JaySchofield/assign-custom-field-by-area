@@ -12,6 +12,9 @@ function parseCustomFieldId(
   return value as `CF.${string}`;
 }
 
+// subzoneFieldId/marketFieldId are the custom fields to write for areas within another
+// area vs. areas that contain another area, respectively; either can be undefined to skip
+// that pass. The rest control testing/output behavior (see parseCliOptions below).
 export type CliOptions = {
   subzoneFieldId: `CF.${string}` | undefined;
   marketFieldId: `CF.${string}` | undefined;
@@ -21,9 +24,8 @@ export type CliOptions = {
   verbose: boolean;
 };
 
-// The ID of the subzone custom field (areas within another area) and the market custom
-// field (areas that contain another area). Set marketFieldId to undefined to skip that
-// pass entirely. See below for the corresponding --flags and their defaults.
+// Parses and validates the script's --flags (see the `options` below for the full list
+// and their defaults) into a CliOptions object.
 export function parseCliOptions(): CliOptions {
   const { values } = parseArgs({
     options: {
