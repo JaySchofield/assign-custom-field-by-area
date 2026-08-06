@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@terros-inc/sdk": "link:../connect/sdk",
+    "@terros-inc/sdk": "@terros-inc/sdk",
     "@turf/turf": "^7.4.0",
     "typescript": "^7.0.2"
   },

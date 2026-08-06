@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@terros-inc/sdk':
-        specifier: link:../connect/sdk
-        version: link:../connect/sdk
+        specifier: '@terros-inc/sdk'
+        version: link:@terros-inc/sdk
       '@turf/turf':
         specifier: ^7.4.0
         version: 7.4.0
